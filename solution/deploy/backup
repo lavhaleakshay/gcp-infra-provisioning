@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: realworld
+  name: realworld
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      run: realworld
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        run: realworld
+    spec:
+      containers:
+      - image: realworld:1
+        imagePullPolicy: Never
+        name: realworld
+        env:
+        - name: "NGINX"
+          value: "http://nginx.default.svc.cluster.local:4200"
+        ports:
+        - containerPort: 5001
+          protocol: TCP
